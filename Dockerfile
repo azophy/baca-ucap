@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     git \
     build-essential \
     wget \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone and build Whisper.cpp
