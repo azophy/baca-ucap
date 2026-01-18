@@ -2,15 +2,68 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Baca & Ucap</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
-        <h1>Baca & Ucap</h1>
-        <p>Game loading...</p>
+        <!-- Top Bar: Timer and Score -->
+        <div class="top-bar">
+            <div class="timer">
+                <span id="time-left">60</span>
+            </div>
+            <div class="score-container">
+                <div class="score">
+                    <span id="score-correct">0</span> betul
+                </div>
+                <div class="remaining">
+                    <span id="words-remaining">0</span> tersisa
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-area">
+            <!-- Word Display -->
+            <div id="word-display" class="word-display">
+                <span id="current-word">Tekan Mulai</span>
+            </div>
+
+            <!-- Record Button -->
+            <button id="record-btn" class="record-button" disabled>
+                <div class="record-icon"></div>
+            </button>
+
+            <!-- Start Button (shown initially) -->
+            <button id="start-btn" class="start-button">
+                Mulai
+            </button>
+        </div>
+
+        <!-- Feedback Layer (hidden by default) -->
+        <div id="feedback" class="feedback hidden">
+            <div id="feedback-emoji" class="feedback-emoji"></div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- End Game Screen -->
+        <div id="end-screen" class="end-screen hidden">
+            <h2>Selesai!</h2>
+            <div class="final-score">
+                <p>Skor kamu:</p>
+                <p class="score-big"><span id="final-score">0</span> betul</p>
+            </div>
+            <button id="play-again-btn" class="play-again-button">
+                Main Lagi
+            </button>
+        </div>
     </div>
-    <script src="game.js"></script>
+
+    <script type="module" src="game.js"></script>
 </body>
 </html>

@@ -39,7 +39,7 @@
    - Implemented cleanupTempFiles() for automatic cleanup
    - Uses random UUID for temp file naming
 
-✅ 1.5 Backend API Contract (Current commit)
+✅ 1.5 Backend API Contract (Commit: 29d6d21)
    - Fully implemented /api/transcribe endpoint in backend/server.ts
    - Accepts multipart/form-data with 'audio' and 'targetWord' fields
    - Complete flow: save → validate → convert → transcribe → evaluate → cleanup
@@ -47,3 +47,77 @@
    - Proper error handling with appropriate HTTP status codes
    - Automatic temp file cleanup in finally block
    - Whisper.cpp availability check before processing
+
+### Phase 3 - Frontend Core Game Loop
+
+✅ 3.1 UI Skeleton (Current commit)
+   - Complete HTML structure in frontend/index.html
+   - Top bar with timer and score display
+   - Large word display (72px font, center aligned)
+   - Big circular record button (160px diameter)
+   - Start button and end game screen
+   - Feedback overlay with emoji display
+   - Loading indicator with spinner
+
+✅ 3.1 Styles (Current commit)
+   - Created frontend/styles.css with mobile-first design
+   - Purple gradient background
+   - Large, child-friendly fonts (48-72px for main elements)
+   - High contrast colors for readability
+   - Touch-optimized buttons with active states
+   - Responsive design for mobile and landscape modes
+   - Smooth animations for feedback and buttons
+
+✅ 3.2 Game State Model (Current commit)
+   - Implemented complete game state in frontend/game.js
+   - State tracking: timeLeft, score, currentWord, words, isRecording, gameActive
+   - Clean state management with explicit properties
+
+✅ 3.3 Timer Logic (Current commit)
+   - 60-second countdown timer
+   - Updates UI every second
+   - Automatically ends game when time reaches 0
+   - No pause/resume (as per PRD)
+
+✅ 3.4 Audio Recording (Current commit)
+   - MediaRecorder API implementation
+   - Supports audio/webm format
+   - Tap-and-hold recording interface
+   - Auto-stop after 3 seconds
+   - Visual feedback during recording (red pulsing icon)
+   - Microphone permission handling
+
+✅ 2.2 Randomization Logic (Current commit)
+   - Fisher-Yates shuffle algorithm
+   - Words shuffled at game start
+   - No repeats within session
+   - Tracks current word index
+
+✅ 3.5 Sending Audio to Backend (Current commit)
+   - FormData API for multipart/form-data
+   - Sends audio blob and targetWord to /api/transcribe
+   - Loading indicator during API call
+   - Error handling (treats errors as incorrect)
+
+### Phase 4 - Feedback & Flow
+
+✅ 4.1 Immediate Feedback (Current commit)
+   - ✅ emoji for correct answers
+   - ❌ emoji for incorrect answers
+   - Bounce animation for feedback display
+   - 1-second feedback duration
+   - Automatic progression to next word
+   - No retry option (as per PRD)
+
+✅ 4.2 Score & Progress Updates (Current commit)
+   - Real-time score counter (correct count)
+   - Remaining words counter
+   - End game screen with final score
+   - "Main Lagi" (Play Again) button
+
+### Phase 5 - Persistence
+
+✅ 5.1 localStorage (Current commit)
+   - Saves lastScore after each game
+   - Tracks bestScore across sessions
+   - Simple key-value storage (no complex data)
