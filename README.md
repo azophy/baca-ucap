@@ -28,9 +28,8 @@ A minimal web-based game to help early readers (ages 4-7) practice reading Indon
 ### For Manual Setup
 - Bun (latest version)
 - ffmpeg and ffprobe
-- git, make, gcc/clang, cmake (for building Whisper.cpp)
-- Whisper.cpp compiled binary
-- Whisper small model (`ggml-small.bin`)
+- git, build-essential, cmake (required by @remotion/install-whisper-cpp)
+- Internet connection (for downloading Whisper.cpp binaries and model)
 
 ## Setup Instructions
 
@@ -58,40 +57,29 @@ bun install
 
 ### 3. Set Up Whisper.cpp
 
-**Option A: Automated Setup (Recommended)**
+**Automated Setup (Recommended)**
 
-Use the provided setup script:
+We use `@remotion/install-whisper-cpp` to automatically download and install Whisper.cpp:
 
 ```bash
 ./setup-whisper.sh
 ```
 
 The script will:
-- Check for all prerequisites (git, make, gcc/clang, cmake)
-- Clone Whisper.cpp repository
-- Build the executable
-- Download the small model
+- Install Whisper.cpp v1.5.5 using @remotion package
+- Download the small model for Indonesian transcription
+- Set up the correct directory structure
 
-**Option B: Manual Setup**
+**Manual Setup Alternative**
 
 ```bash
-# Clone Whisper.cpp
-cd backend
-git clone https://github.com/ggerganov/whisper.cpp whisper
-cd whisper
-
-# Build the main executable
-make
-
-# Download the small model
-bash ./models/download-ggml-model.sh small
-
-cd ../..
+# Run the TypeScript setup script directly
+bun backend/setup-whisper-remotion.ts
 ```
 
 After setup, you should have:
-- `backend/whisper/main` (executable)
-- `backend/whisper/models/ggml-small.bin` (model file)
+- `backend/whisper/main` (Whisper.cpp executable)
+- `backend/whisper/ggml-small.bin` (model file)
 
 ### 4. Configure Environment (Optional)
 
@@ -99,10 +87,14 @@ Create a `.env` file in the project root if you need custom paths:
 
 ```env
 PORT=3000
-WHISPER_PATH=/path/to/whisper/main
-WHISPER_MODEL=/path/to/models/ggml-small.bin
+WHISPER_PATH=/path/to/whisper  # Directory containing Whisper.cpp
+WHISPER_MODEL=small             # Model name (small, base, medium, etc.)
 TEMP_DIR=/tmp
 ```
+
+**Note:** Environment variable format has changed:
+- `WHISPER_PATH` now points to the directory (not the executable)
+- `WHISPER_MODEL` is now just the model name (not the full path)
 
 Bun automatically loads `.env` files.
 
@@ -178,9 +170,10 @@ The Docker image:
 - Based on Debian Bookworm Slim
 - Includes Bun runtime
 - Includes ffmpeg for audio processing
-- Includes pre-built Whisper.cpp with small model
+- Includes Whisper.cpp (installed via @remotion/install-whisper-cpp)
+- Includes small model for Indonesian transcription
 - Total size: ~1.5GB (includes 500MB model file)
-- Multi-stage build for efficiency
+- Single-stage build using automated setup
 
 ## Project Structure
 
@@ -188,14 +181,14 @@ The Docker image:
 baca-ucap/
 ├── backend/
 │   ├── server.ts           # Main Bun server
-│   ├── whisper.ts          # Whisper.cpp wrapper
+│   ├── whisper.ts          # Whisper.cpp wrapper (using @remotion)
 │   ├── audio.ts            # Audio processing utilities
 │   ├── matching.ts         # Text normalization and matching
 │   ├── matching.test.ts    # Tests for matching logic
-│   └── whisper/            # Whisper.cpp installation
+│   ├── setup-whisper-remotion.ts  # Whisper.cpp setup script
+│   └── whisper/            # Whisper.cpp installation (via @remotion)
 │       ├── main            # Whisper executable
-│       └── models/
-│           └── ggml-small.bin
+│       └── ggml-small.bin  # Model file
 ├── frontend/
 │   ├── index.html          # Main game UI
 │   ├── styles.css          # Child-friendly styles
@@ -347,7 +340,8 @@ server {
 
 ### "Whisper.cpp not configured" error
 - Ensure `backend/whisper/main` exists and is executable
-- Ensure `backend/whisper/models/ggml-small.bin` exists
+- Ensure `backend/whisper/ggml-small.bin` exists (note: model is now in whisper root, not models/ subdirectory)
+- Run `./setup-whisper.sh` or `bun backend/setup-whisper-remotion.ts` to set up
 - Check file permissions
 
 ### Audio recording not working

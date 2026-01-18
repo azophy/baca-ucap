@@ -1,35 +1,13 @@
-# Multi-stage build for Baca & Ucap
+# Simplified single-stage build for Baca & Ucap
+# Using @remotion/install-whisper-cpp for Whisper.cpp installation
 
-# Stage 1: Build Whisper.cpp
-FROM debian:bookworm-slim AS whisper-builder
+FROM debian:bookworm-slim
 
-# Install build dependencies
+# Install all dependencies (build tools needed by @remotion, runtime dependencies)
 RUN apt-get update && apt-get install -y \
     git \
     build-essential \
-    wget \
     cmake \
-    && rm -rf /var/lib/apt/lists/*
-
-# Clone and build Whisper.cpp
-WORKDIR /tmp/whisper
-RUN git clone https://github.com/ggerganov/whisper.cpp . && \
-    cmake -B build && \
-    cmake --build build --config Release && \
-    cp build/bin/main . || cp build/main . || true && \
-    ls -la && \
-    ls -la build/ || true && \
-    test -f main || (echo "Error: main binary not found after build" && exit 1)
-
-# Download the small model
-WORKDIR /tmp/whisper/models
-RUN bash download-ggml-model.sh small
-
-# Stage 2: Runtime image
-FROM debian:bookworm-slim
-
-# Install runtime dependencies
-RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     ffmpeg \
@@ -44,28 +22,27 @@ ENV PATH="/root/.bun/bin:${PATH}"
 # Create app directory
 WORKDIR /app
 
-# Copy Whisper.cpp binary and model from builder stage
-COPY --from=whisper-builder /tmp/whisper/main /app/backend/whisper/main
-COPY --from=whisper-builder /tmp/whisper/models/ggml-small.bin /app/backend/whisper/models/ggml-small.bin
-
-# Make whisper executable
-RUN chmod +x /app/backend/whisper/main
-
 # Copy package files
 COPY package.json bun.lockb* ./
 
-# Install dependencies
+# Install dependencies (includes @remotion/install-whisper-cpp)
 RUN bun install --frozen-lockfile
+
+# Copy setup script
+COPY backend/setup-whisper-remotion.ts ./backend/
+
+# Run Whisper.cpp setup using @remotion package
+RUN bun backend/setup-whisper-remotion.ts
 
 # Copy application source
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 COPY words/ ./words/
 
-# Set environment variables
+# Set environment variables (updated format)
 ENV PORT=3000
-ENV WHISPER_PATH=/app/backend/whisper/main
-ENV WHISPER_MODEL=/app/backend/whisper/models/ggml-small.bin
+ENV WHISPER_PATH=/app/backend/whisper
+ENV WHISPER_MODEL=small
 ENV TEMP_DIR=/tmp
 ENV NODE_ENV=production
 

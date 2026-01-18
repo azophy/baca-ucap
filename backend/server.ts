@@ -14,6 +14,61 @@ const server = serve({
     const path = url.pathname;
 
     // API endpoints
+    if (path === "/api/health" && req.method === "GET") {
+      try {
+        // WHISPER_PATH now points to directory, not executable
+        const whisperDir = process.env.WHISPER_PATH || join(import.meta.dir, "whisper");
+        // WHISPER_MODEL is now just the model name
+        const modelName = process.env.WHISPER_MODEL || "small";
+
+        // Check for executable in the whisper directory
+        const execPath = join(whisperDir, "main");
+        const execFile = Bun.file(execPath);
+        const execExists = await execFile.exists();
+
+        // Model files are now in the whisper root directory
+        const modelPath = join(whisperDir, `ggml-${modelName}.bin`);
+        const modelFile = Bun.file(modelPath);
+        const modelExists = await modelFile.exists();
+
+        return new Response(
+          JSON.stringify({
+            status: "ok",
+            whisper: {
+              directory: whisperDir,
+              executablePath: execPath,
+              executableExists: execExists,
+              modelName: modelName,
+              modelPath: modelPath,
+              modelExists: modelExists,
+              configured: execExists && modelExists
+            },
+            environment: {
+              WHISPER_PATH: process.env.WHISPER_PATH || "not set (using default)",
+              WHISPER_MODEL: process.env.WHISPER_MODEL || "not set (using default)",
+              TEMP_DIR: process.env.TEMP_DIR || "not set",
+              NODE_ENV: process.env.NODE_ENV || "not set"
+            }
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      } catch (error) {
+        return new Response(
+          JSON.stringify({
+            status: "error",
+            error: error instanceof Error ? error.message : "Unknown error"
+          }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      }
+    }
+
     if (path === "/api/transcribe" && req.method === "POST") {
       const tempFiles: string[] = [];
 
