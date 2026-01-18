@@ -28,14 +28,19 @@ COPY package.json bun.lockb* ./
 # Install dependencies (includes @remotion/install-whisper-cpp)
 RUN bun install --frozen-lockfile
 
-# Copy application source FIRST
+# Copy only the setup script to run Whisper.cpp installation
+# This layer will be cached unless the setup script changes
+COPY backend/setup-whisper-remotion.ts ./backend/
+
+# Run Whisper.cpp setup using @remotion package
+# Clean up any cached whisper directory first to avoid installation conflicts
+RUN rm -rf backend/whisper && bun backend/setup-whisper-remotion.ts
+
+# Copy application source AFTER Whisper setup
+# Changes to these files won't trigger Whisper reinstallation
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 COPY words/ ./words/
-
-# Run Whisper.cpp setup using @remotion package AFTER copying source
-# Clean up any cached whisper directory first to avoid installation conflicts
-RUN rm -rf backend/whisper && bun backend/setup-whisper-remotion.ts
 
 # Set environment variables (updated format)
 ENV PORT=3000
