@@ -32,3 +32,12 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Whisper.cpp installation (large binary and model files)
+backend/whisper/
+
+# Temporary audio files
+*.webm
+*.wav
+audio_*.webm
+audio_*.wav

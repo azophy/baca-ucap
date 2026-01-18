@@ -117,7 +117,57 @@
 
 ### Phase 5 - Persistence
 
-✅ 5.1 localStorage (Current commit)
+✅ 5.1 localStorage (Commit: d6131ce)
    - Saves lastScore after each game
    - Tracks bestScore across sessions
    - Simple key-value storage (no complex data)
+
+### Phase 6 - Documentation & Deployment Prep
+
+✅ Documentation (Current commit)
+   - Created comprehensive README.md with:
+     - Feature overview
+     - Complete setup instructions
+     - Whisper.cpp installation guide
+     - API reference
+     - VPS deployment guide with systemd example
+     - Nginx reverse proxy configuration
+     - Troubleshooting section
+   - Created setup-whisper.sh automated setup script
+   - Updated .gitignore to exclude Whisper.cpp binaries and temp files
+
+## Next Steps (Post-Implementation)
+
+The MVP is now complete and ready for deployment. Remaining tasks:
+
+📋 Phase 7 - VPS Deployment
+   - Install Bun on VPS
+   - Install ffmpeg/ffprobe
+   - Run setup-whisper.sh to build Whisper.cpp
+   - Configure systemd service
+   - Set up Nginx reverse proxy with HTTPS
+   - Test on actual VPS with child voice samples
+
+📋 Phase 8 - Testing & Polish
+   - Test on real mobile devices (Android & iOS)
+   - Test with actual children (ages 4-7)
+   - Verify Whisper.cpp accuracy for Indonesian children's speech
+   - Adjust normalization rules if needed
+   - Add optional sound effects (if desired)
+   - Performance tuning
+
+## MVP Definition of Done Checklist
+
+✅ 60-second playable reading game
+✅ CSV-driven word list (35 Indonesian words)
+✅ Whisper.cpp transcription integration (pending binary setup)
+✅ Clear visual feedback (✅/❌ emojis with animations)
+✅ Mobile-first responsive design
+✅ Backend API fully implemented
+✅ Audio recording and processing complete
+✅ No audio storage (privacy-safe)
+✅ localStorage for score tracking
+✅ Complete documentation
+
+🔲 Deployed on VPS (pending deployment phase)
+🔲 Tested on mobile browsers (pending deployment phase)
