@@ -119,10 +119,19 @@ const server = serve({
     // Static file serving
     const publicDir = join(import.meta.dir, "..", "public");
     const frontendDir = join(import.meta.dir, "..", "frontend");
+    const wordsDir = join(import.meta.dir, "..", "words");
 
     // Try to serve from public directory first
     let filePath = join(publicDir, path === "/" ? "index.html" : path);
     let file = Bun.file(filePath);
+
+    if (await file.exists()) {
+      return new Response(file);
+    }
+
+    // Try to serve from words directory
+    filePath = join(wordsDir, path.replace(/^\/words\//, ""));
+    file = Bun.file(filePath);
 
     if (await file.exists()) {
       return new Response(file);
