@@ -34,7 +34,8 @@ COPY frontend/ ./frontend/
 COPY words/ ./words/
 
 # Run Whisper.cpp setup using @remotion package AFTER copying source
-RUN bun backend/setup-whisper-remotion.ts
+# Clean up any cached whisper directory first to avoid installation conflicts
+RUN rm -rf backend/whisper && bun backend/setup-whisper-remotion.ts
 
 # Set environment variables (updated format)
 ENV PORT=3000
