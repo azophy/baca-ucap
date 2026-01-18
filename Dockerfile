@@ -14,7 +14,12 @@ RUN apt-get update && apt-get install -y \
 # Clone and build Whisper.cpp
 WORKDIR /tmp/whisper
 RUN git clone https://github.com/ggerganov/whisper.cpp . && \
-    make
+    cmake -B build && \
+    cmake --build build --config Release && \
+    cp build/bin/main . || cp build/main . || true && \
+    ls -la && \
+    ls -la build/ || true && \
+    test -f main || (echo "Error: main binary not found after build" && exit 1)
 
 # Download the small model
 WORKDIR /tmp/whisper/models
