@@ -23,6 +23,7 @@ const elements = {
   currentWord: document.getElementById('current-word'),
   recordBtn: document.getElementById('record-btn'),
   startBtn: document.getElementById('start-btn'),
+  instructions: document.getElementById('instructions'),
   feedback: document.getElementById('feedback'),
   feedbackEmoji: document.getElementById('feedback-emoji'),
   loading: document.getElementById('loading'),
@@ -106,9 +107,10 @@ async function startGame() {
   // Shuffle words again
   state.words = shuffleArray(state.words);
 
-  // Hide start button, show record button
+  // Hide start button, show record button and instructions
   elements.startBtn.classList.add('hidden');
   elements.recordBtn.disabled = false;
+  elements.instructions.classList.remove('hidden');
 
   // Show first word
   nextWord();
@@ -306,6 +308,7 @@ function playSound(isCorrect) {
 function endGame() {
   state.gameActive = false;
   elements.recordBtn.disabled = true;
+  elements.instructions.classList.add('hidden');
 
   // Stop audio stream
   if (state.audioStream) {
@@ -382,6 +385,23 @@ elements.recordBtn.addEventListener('touchend', (e) => {
 // Prevent context menu on record button
 elements.recordBtn.addEventListener('contextmenu', (e) => {
   e.preventDefault();
+});
+
+// Spacebar - hold to record (alternative to button)
+document.addEventListener('keydown', (e) => {
+  // Only handle spacebar if game is active and not already recording
+  if (e.code === 'Space' && state.gameActive && !state.isRecording) {
+    e.preventDefault();
+    startRecording();
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  // Only handle spacebar if recording
+  if (e.code === 'Space' && state.isRecording) {
+    e.preventDefault();
+    stopRecording();
+  }
 });
 
 /**

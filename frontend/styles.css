@@ -136,6 +136,26 @@ body {
     50% { transform: scale(1.1); }
 }
 
+/* Instructions */
+.instructions {
+    font-size: 20px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: -40px;
+}
+
+.instructions kbd {
+    display: inline-block;
+    padding: 4px 8px;
+    font-family: monospace;
+    font-size: 18px;
+    color: #333;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 0 #dee2e6;
+}
+
 /* Start Button */
 .start-button {
     padding: 24px 60px;
@@ -300,6 +320,15 @@ body {
     .start-button {
         font-size: 32px;
         padding: 20px 50px;
+    }
+
+    .instructions {
+        font-size: 16px;
+        padding: 0 20px;
+    }
+
+    .instructions kbd {
+        font-size: 14px;
     }
 }
 
