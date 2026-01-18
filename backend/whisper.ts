@@ -11,6 +11,8 @@ import { join } from "path";
 const WHISPER_DIR = process.env.WHISPER_PATH || join(import.meta.dir, "whisper");
 // WHISPER_MODEL is now just the model name (e.g., "small", "base", "medium")
 const MODEL_NAME = process.env.WHISPER_MODEL || "small";
+// WHISPER_VERSION should match the version installed by setup script
+const WHISPER_VERSION = process.env.WHISPER_VERSION || "1.5.5";
 
 export interface TranscriptionResult {
   text: string;
@@ -27,6 +29,7 @@ export async function transcribeAudio(audioFilePath: string): Promise<Transcript
   try {
     // Log debug information
     console.log(`[Whisper] Directory: ${WHISPER_DIR}`);
+    console.log(`[Whisper] Version: ${WHISPER_VERSION}`);
     console.log(`[Whisper] Model: ${MODEL_NAME}`);
     console.log(`[Whisper] Audio file: ${audioFilePath}`);
 
@@ -34,13 +37,18 @@ export async function transcribeAudio(audioFilePath: string): Promise<Transcript
     const result = await transcribe({
       inputPath: audioFilePath,
       whisperPath: WHISPER_DIR,
+      whisperCppVersion: WHISPER_VERSION,
       model: MODEL_NAME,
       language: 'id', // Indonesian language
       tokenLevelTimestamps: false,
     });
 
-    // The transcribe() API returns a structured object with transcription
-    const transcription = result.transcription.trim();
+    // The transcribe() API returns a structured object with transcription as an array
+    // Extract text from each transcription item and join them
+    const transcription = result.transcription
+      .map(item => item.text)
+      .join(' ')
+      .trim();
 
     if (!transcription) {
       console.log(`[Whisper] Warning: Empty transcription received`);

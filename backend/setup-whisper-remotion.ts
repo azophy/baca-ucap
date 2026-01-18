@@ -11,7 +11,7 @@
  */
 
 import { installWhisperCpp, downloadWhisperModel } from '@remotion/install-whisper-cpp';
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 const WHISPER_DIR = join(import.meta.dir, 'whisper');
@@ -24,7 +24,7 @@ console.log('Using @remotion/install-whisper-cpp');
 console.log('=========================================');
 console.log('');
 
-// Check if directory exists
+// Check if directory exists and remove it (let installWhisperCpp create it fresh)
 if (existsSync(WHISPER_DIR)) {
   console.log('Whisper directory already exists at:', WHISPER_DIR);
   console.log('Removing existing installation...');
@@ -32,11 +32,8 @@ if (existsSync(WHISPER_DIR)) {
   console.log('');
 }
 
-// Create whisper directory
-mkdirSync(WHISPER_DIR, { recursive: true });
-
 try {
-  // Step 1: Install Whisper.cpp
+  // Step 1: Install Whisper.cpp (will create the directory)
   console.log(`Installing Whisper.cpp v${WHISPER_VERSION}...`);
   console.log('This may take a few minutes...');
   console.log('');
