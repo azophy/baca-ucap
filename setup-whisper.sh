@@ -14,21 +14,72 @@ if [ ! -f "backend/server.ts" ]; then
     exit 1
 fi
 
+# Detect OS for installation instructions
+detect_os() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if [ -f /etc/debian_version ]; then
+            echo "debian"
+        elif [ -f /etc/redhat-release ]; then
+            echo "redhat"
+        else
+            echo "linux"
+        fi
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    else
+        echo "unknown"
+    fi
+}
+
+OS=$(detect_os)
+
 # Check for required tools
 echo "Checking prerequisites..."
 
+MISSING_TOOLS=()
+
 if ! command -v git &> /dev/null; then
-    echo "Error: git is not installed. Please install git first."
-    exit 1
+    MISSING_TOOLS+=("git")
 fi
 
 if ! command -v make &> /dev/null; then
-    echo "Error: make is not installed. Please install build-essential or equivalent."
-    exit 1
+    MISSING_TOOLS+=("make")
 fi
 
-if ! command -v gcc &> /dev/null; then
-    echo "Error: gcc is not installed. Please install build-essential or equivalent."
+if ! command -v gcc &> /dev/null && ! command -v clang &> /dev/null; then
+    MISSING_TOOLS+=("gcc/clang")
+fi
+
+if ! command -v cmake &> /dev/null; then
+    MISSING_TOOLS+=("cmake")
+fi
+
+if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
+    echo "Error: Missing required tools: ${MISSING_TOOLS[*]}"
+    echo ""
+    echo "Please install the missing tools:"
+    echo ""
+
+    case $OS in
+        "debian")
+            echo "  sudo apt-get update"
+            echo "  sudo apt-get install -y git build-essential cmake"
+            ;;
+        "redhat")
+            echo "  sudo yum groupinstall 'Development Tools'"
+            echo "  sudo yum install -y git cmake"
+            ;;
+        "macos")
+            echo "  brew install git cmake"
+            echo ""
+            echo "  Or install Xcode Command Line Tools:"
+            echo "  xcode-select --install"
+            ;;
+        *)
+            echo "  Install: git, make, gcc (or clang), and cmake"
+            ;;
+    esac
+
     exit 1
 fi
 

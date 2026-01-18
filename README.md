@@ -21,8 +21,14 @@ A minimal web-based game to help early readers (ages 4-7) practice reading Indon
 
 ## Prerequisites
 
+### For Docker (Recommended)
+- Docker
+- Docker Compose (optional)
+
+### For Manual Setup
 - Bun (latest version)
 - ffmpeg and ffprobe
+- git, make, gcc/clang, cmake (for building Whisper.cpp)
 - Whisper.cpp compiled binary
 - Whisper small model (`ggml-small.bin`)
 
@@ -34,12 +40,14 @@ A minimal web-based game to help early readers (ages 4-7) practice reading Indon
 # Install Bun (if not already installed)
 curl -fsSL https://bun.sh/install | bash
 
-# Install ffmpeg (Ubuntu/Debian)
+# Install build tools and ffmpeg (Ubuntu/Debian)
 sudo apt-get update
-sudo apt-get install ffmpeg
+sudo apt-get install -y git build-essential cmake ffmpeg
 
 # Or on macOS
-brew install ffmpeg
+brew install git cmake ffmpeg
+# Or install Xcode Command Line Tools:
+# xcode-select --install
 ```
 
 ### 2. Install Node Dependencies
@@ -50,7 +58,21 @@ bun install
 
 ### 3. Set Up Whisper.cpp
 
-You need to build Whisper.cpp and download the model:
+**Option A: Automated Setup (Recommended)**
+
+Use the provided setup script:
+
+```bash
+./setup-whisper.sh
+```
+
+The script will:
+- Check for all prerequisites (git, make, gcc/clang, cmake)
+- Clone Whisper.cpp repository
+- Build the executable
+- Download the small model
+
+**Option B: Manual Setup**
 
 ```bash
 # Clone Whisper.cpp

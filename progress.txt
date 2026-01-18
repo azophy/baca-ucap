@@ -136,7 +136,7 @@
    - Created setup-whisper.sh automated setup script
    - Updated .gitignore to exclude Whisper.cpp binaries and temp files
 
-✅ Docker Integration (Current commit)
+✅ Docker Integration (Commit: 140ec21, 1045c2c)
    - Created multi-stage Dockerfile:
      - Stage 1: Builds Whisper.cpp from source
      - Stage 2: Runtime image with Bun, ffmpeg, and app
@@ -147,6 +147,15 @@
    - Created .dockerignore for efficient builds
    - Updated README with Docker setup and deployment instructions
    - Docker now recommended deployment method
+   - Created DOCKER.md quick reference guide
+
+✅ Setup Script Improvements (Current commit)
+   - Enhanced setup-whisper.sh with cmake detection
+   - Added OS detection (Debian, RedHat, macOS)
+   - Provides platform-specific installation instructions
+   - Checks all prerequisites: git, make, gcc/clang, cmake
+   - User-friendly error messages with exact commands to run
+   - Updated README to clarify cmake requirement
 
 ## Next Steps (Post-Implementation)
 
