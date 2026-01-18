@@ -21,3 +21,29 @@
 ✅ 2.1 CSV Loader (Commit: c893cdb)
    - Created words/words.csv with 35 common Indonesian words suitable for ages 4-7
    - Words include: buku, meja, ayam, kucing, anjing, body parts, family, household items, etc.
+
+✅ 1.2 Integrate Whisper.cpp (Current commit)
+   - Created backend/whisper.ts with Whisper.cpp wrapper
+   - Implemented transcribeAudio() function using child_process spawn
+   - Added support for Indonesian language transcription (-l id flag)
+   - Implemented extractTranscription() to parse Whisper.cpp output
+   - Added checkWhisperAvailable() to verify Whisper.cpp setup
+   - Configured for ggml-small.bin model
+
+✅ 1.3 Audio Format Handling (Current commit)
+   - Created backend/audio.ts for audio file management
+   - Implemented saveToTempFile() for handling audio blobs
+   - Added validateAudioFile() with size and duration checks (max 5MB, 4 seconds)
+   - Implemented convertToWav() using ffmpeg (16kHz, mono, 16-bit PCM)
+   - Added getAudioDuration() using ffprobe
+   - Implemented cleanupTempFiles() for automatic cleanup
+   - Uses random UUID for temp file naming
+
+✅ 1.5 Backend API Contract (Current commit)
+   - Fully implemented /api/transcribe endpoint in backend/server.ts
+   - Accepts multipart/form-data with 'audio' and 'targetWord' fields
+   - Complete flow: save → validate → convert → transcribe → evaluate → cleanup
+   - Returns JSON: { transcript, isCorrect }
+   - Proper error handling with appropriate HTTP status codes
+   - Automatic temp file cleanup in finally block
+   - Whisper.cpp availability check before processing
