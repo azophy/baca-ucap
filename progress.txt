@@ -1,0 +1,23 @@
+## Completed Tasks
+
+### Phase 1 - Backend Foundation
+
+✅ 1.1 Set Up Bun Backend (Commit: 0e5c70e)
+   - Initialized Bun project with TypeScript
+   - Created backend/server.ts with basic HTTP server
+   - Added /api/transcribe endpoint stub
+   - Configured static file serving (public/ and frontend/ directories)
+   - Created frontend/index.html skeleton
+   - Set up project structure: backend/, frontend/, public/, words/
+
+✅ 1.4 Normalization & Matching Logic (Commit: c893cdb)
+   - Implemented normalizeText() function with heavy normalization (lowercase, trim, remove punctuation, collapse spaces)
+   - Implemented isMatch() function that checks if normalized transcript contains target word
+   - Implemented evaluateTranscription() function for detailed match evaluation
+   - Created comprehensive test suite with 15 passing tests in backend/matching.test.ts
+
+### Phase 2 - Word Content System
+
+✅ 2.1 CSV Loader (Commit: c893cdb)
+   - Created words/words.csv with 35 common Indonesian words suitable for ages 4-7
+   - Words include: buku, meja, ayam, kucing, anjing, body parts, family, household items, etc.
