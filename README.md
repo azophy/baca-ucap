@@ -96,6 +96,70 @@ bun backend/server.ts
 
 The server will start on `http://localhost:3000`
 
+## Docker Setup (Recommended)
+
+The easiest way to run the application is using Docker. All dependencies including Whisper.cpp and ffmpeg are automatically installed.
+
+### Prerequisites
+
+- Docker
+- Docker Compose (optional, but recommended)
+
+### Quick Start with Docker Compose
+
+```bash
+# Build and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+The application will be available at `http://localhost:3000`
+
+### Using Docker CLI
+
+```bash
+# Build the image
+docker build -t baca-ucap .
+
+# Run the container
+docker run -d \
+  --name baca-ucap \
+  -p 3000:3000 \
+  -v $(pwd)/words:/app/words:ro \
+  baca-ucap
+
+# View logs
+docker logs -f baca-ucap
+
+# Stop and remove container
+docker stop baca-ucap
+docker rm baca-ucap
+```
+
+### Update Word List
+
+With Docker Compose, you can update the word list without rebuilding:
+
+1. Edit `words/words.csv` on your host machine
+2. Restart the container: `docker-compose restart`
+
+The words directory is mounted as a read-only volume.
+
+### Docker Image Details
+
+The Docker image:
+- Based on Debian Bookworm Slim
+- Includes Bun runtime
+- Includes ffmpeg for audio processing
+- Includes pre-built Whisper.cpp with small model
+- Total size: ~1.5GB (includes 500MB model file)
+- Multi-stage build for efficiency
+
 ## Project Structure
 
 ```
@@ -174,7 +238,25 @@ Transcribe audio and check against target word.
 
 ## Deployment
 
-### VPS Deployment
+### Docker Deployment (Recommended)
+
+The easiest deployment method is using Docker:
+
+```bash
+# On your VPS, clone the repository
+git clone <your-repo-url> baca-ucap
+cd baca-ucap
+
+# Build and run with Docker Compose
+docker-compose up -d
+
+# Check logs
+docker-compose logs -f
+```
+
+Set up a reverse proxy (see Nginx section below) to handle HTTPS.
+
+### VPS Deployment (Manual)
 
 1. Install prerequisites on VPS (Bun, ffmpeg, build Whisper.cpp)
 2. Clone repository

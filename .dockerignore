@@ -1,0 +1,61 @@
+# Dependencies
+node_modules
+bun.lockb
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+PRD.md
+PLAN.md
+progress.txt
+
+# Development files
+.env
+.env.*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Test coverage
+coverage
+*.lcov
+
+# Build outputs
+out
+dist
+*.tgz
+
+# Whisper.cpp (will be built in Docker)
+backend/whisper/
+
+# Temporary audio files
+*.webm
+*.wav
+audio_*.webm
+audio_*.wav
+
+# Scripts
+setup-whisper.sh
+
+# Cache
+.cache
+.eslintcache
+*.tsbuildinfo
+
+# Public directory (if empty)
+public
