@@ -66,6 +66,18 @@ describe("isMatch", () => {
     // This is expected behavior per PRD - contains check
     expect(isMatch("buku", "bukuku")).toBe(true);
   });
+
+  test("handles spaces in transcript that should be ignored", () => {
+    // Speech recognition sometimes adds spaces within words
+    expect(isMatch("ikan", "ik an")).toBe(true);
+    expect(isMatch("buku", "bu ku")).toBe(true);
+    expect(isMatch("ayam", "a y am")).toBe(true);
+  });
+
+  test("handles spaces with filler words", () => {
+    expect(isMatch("ikan", "uh ik an")).toBe(true);
+    expect(isMatch("ikan", "ik an ya")).toBe(true);
+  });
 });
 
 describe("evaluateTranscription", () => {
